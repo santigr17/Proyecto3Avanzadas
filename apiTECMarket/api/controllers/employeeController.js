@@ -1,14 +1,14 @@
 var mongoose = require("mongoose");
 employee = mongoose.model("Employee");
 
-exports.all_employees = function(res, req) {
+exports.all_employees = function(req, res) {
   employee.find({}, { _id: 0, __v: 0 }, function(error, employees) {
     if (error) res.send(error);
     res.json(employees);
   });
 };
 
-exports.create_new = function(res, req) {
+exports.create_new = function(req, res) {
   var new_port = new employee(req.body);
   new_port.save(function(error, employee) {
     if (error) res.send(error);
@@ -16,7 +16,7 @@ exports.create_new = function(res, req) {
   });
 };
 
-exports.get_data = function(res, req) {
+exports.get_data = function(req, res) {
   employee.find({ Identification: req.params.id }, { _id: 0, __v: 0 }, function(
     error,
     employee
@@ -26,7 +26,7 @@ exports.get_data = function(res, req) {
   });
 };
 
-exports.update = function(res, req) {
+exports.update = function(req, res) {
   employee.findOneAndUpdate(
     { Identification: req.params.id },
     req.body,

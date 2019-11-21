@@ -1,14 +1,14 @@
 var mongoose = require("mongoose");
 client = mongoose.model("Client");
 
-exports.all_clients = function(res, req) {
+exports.all_clients = function(req, res) {
   client.find({}, { _id: 0, __v: 0 }, function(error, clients) {
     if (error) res.send(error);
     res.json(clients);
   });
 };
 
-exports.create_new = function(res, req) {
+exports.create_new = function(req, res) {
   var new_port = new client(req.body);
   new_port.save(function(error, client) {
     if (error) res.send(error);
@@ -16,7 +16,7 @@ exports.create_new = function(res, req) {
   });
 };
 
-exports.get_data = function(res, req) {
+exports.get_data = function(req, res) {
   client.find({ Identification: req.params.id }, { _id: 0, __v: 0 }, function(
     error,
     client
@@ -26,7 +26,7 @@ exports.get_data = function(res, req) {
   });
 };
 
-exports.update = function(res, req) {
+exports.update = function(req, res) {
   client.findOneAndUpdate(
     { Identification: req.params.id },
     req.body,
