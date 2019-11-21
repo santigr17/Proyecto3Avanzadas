@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 employee = mongoose.model("Employee");
 
 exports.all_employees = function(res, req) {
-  employee.find({}, function(error, employees) {
+  employee.find({}, { _id: 0, __v: 0 }, function(error, employees) {
     if (error) res.send(error);
     res.json(employees);
   });
@@ -17,7 +17,10 @@ exports.create_new = function(res, req) {
 };
 
 exports.get_data = function(res, req) {
-  employee.find({ Identification: req.params.id }, function(error, employee) {
+  employee.find({ Identification: req.params.id }, { _id: 0, __v: 0 }, function(
+    error,
+    employee
+  ) {
     if (error) res.send(error);
     res.json(employee);
   });

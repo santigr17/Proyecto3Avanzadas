@@ -17,7 +17,10 @@ exports.create_new = function(res, req) {
 };
 
 exports.get_data = function(res, req) {
-  client.find({ Identification: req.params.id }, function(error, client) {
+  client.find({ Identification: req.params.id }, { _id: 0, __v: 0 }, function(
+    error,
+    client
+  ) {
     if (error) res.send(error);
     res.json(client);
   });
