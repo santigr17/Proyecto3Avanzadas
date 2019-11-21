@@ -4,9 +4,11 @@ var express = require("express"),
   port = process.env.PORT || 8080,
   mongoose = require("mongoose"),
   market = require("./api/models/marketModel"),
-  bodyParser = require("body-parser");
-
-useStyle;
+  client = require("./api/models/clientModel"),
+  employee = require("./api/models/employeeModel"),
+  order = require("./api/models/orderModel");
+(product = require("./api/models/productModel")),
+  (bodyParser = require("body-parser"));
 
 const connectionString = "mongodb://localhost/TECMarket";
 mongoose.Promise = global.Promise;

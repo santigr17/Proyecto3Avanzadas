@@ -7,7 +7,7 @@ module.exports = function(app) {
   var employee = require("../controllers/employeeController");
 
   //   MARKET routes
-  app.route("/markets/").get(market.all_amarkets);
+  app.route("/markets/").get(market.all_markets);
 
   app.route("/market/").post(market.create_new);
 
