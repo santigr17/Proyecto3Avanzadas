@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 client = mongoose.model("Client");
 
 exports.all_clients = function(res, req) {
-  client.find({}, function(error, clients) {
+  client.find({}, { _id: 0, __v: 0 }, function(error, clients) {
     if (error) res.send(error);
     res.json(clients);
   });

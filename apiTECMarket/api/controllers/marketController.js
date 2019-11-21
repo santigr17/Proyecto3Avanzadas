@@ -1,14 +1,14 @@
 var mongoose = require("mongoose");
 market = mongoose.model("Market");
 
-exports.all_markets = function(res, req) {
-  market.find({}, function(error, markets) {
+exports.all_markets = function(req, res) {
+  market.find({}, { _id: 0, __v: 0 }, function(error, markets) {
     if (error) res.send(error);
     res.json(markets);
   });
 };
 
-exports.create_new = function(res, req) {
+exports.create_new = function(req, res) {
   var new_port = new market(req.body);
   new_port.save(function(error, market) {
     if (error) res.send(error);
@@ -16,14 +16,17 @@ exports.create_new = function(res, req) {
   });
 };
 
-exports.get_data = function(res, req) {
-  market.find({ Code: req.params.code }, function(error, market) {
+exports.get_data = function(req, res) {
+  market.find({ Code: req.params.code }, { _id: 0, __v: 0 }, function(
+    error,
+    market
+  ) {
     if (error) res.send(error);
     res.json(market);
   });
 };
 
-exports.update = function(res, req) {
+exports.update = function(req, res) {
   market.findOneAndUpdate(
     { Code: req.params.code },
     req.body,
