@@ -34,7 +34,7 @@ module.exports = function(app) {
   app.route("/client/").post(client.create_new);
 
   app
-    .route("/client/:code")
+    .route("/client/:id")
     .get(client.get_data)
     .put(client.update)
     .delete(client.delete);
@@ -56,7 +56,7 @@ module.exports = function(app) {
   app.route("/employee/").post(employee.create_new);
 
   app
-    .route("/employee/:code")
+    .route("/employee/:id")
     .get(employee.get_data)
     .put(employee.update)
     .delete(employee.delete);
