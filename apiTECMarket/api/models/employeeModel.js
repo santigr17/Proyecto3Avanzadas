@@ -5,7 +5,8 @@ var EmployeeSchema = new Schema({
   Identification: Number,
   Name: String,
   Username: String,
-  Password: String
+  Password: String,
+  MarketCode: Number
 });
 
 module.exports = mongoose.model("Employee", EmployeeSchema);
