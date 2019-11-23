@@ -7,7 +7,8 @@ var MarketSchema = new Schema({
   Latitude: String,
   Longitude: String,
   Address: String,
-  Description: String
+  Description: String,
+  Products: Array
 });
 
 module.exports = mongoose.model("Market", MarketSchema);
