@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 var ProductSchema = new Schema({
   Code: Number,
+  MarketCode: Number,
   Name: String,
   Description: String,
   Price: Number
