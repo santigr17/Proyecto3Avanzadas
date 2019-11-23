@@ -5,6 +5,7 @@ module.exports = function(app) {
   var client = require("../controllers/clientController");
   var order = require("../controllers/orderController");
   var employee = require("../controllers/employeeController");
+  var graph = require("../controllers/graphController");
 
   //   MARKET routes
   app.route("/markets/").get(market.all_markets);
@@ -60,4 +61,9 @@ module.exports = function(app) {
     .get(employee.get_data)
     .put(employee.update)
     .delete(employee.delete);
+
+  //  Graph DataBase routes
+  app
+    .route("/graph/migrate/")
+    .get(graph.migrate);
 };
