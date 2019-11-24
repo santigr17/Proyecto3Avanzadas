@@ -7,5 +7,6 @@ var ProductSchema = new Schema({
   Description: String,
   Price: Number
 });
+
 // Hay que agregar foto
 module.exports = mongoose.model("Product", ProductSchema);
