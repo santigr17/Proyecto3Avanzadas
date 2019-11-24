@@ -1,14 +1,11 @@
 import React from 'react';
 import './App.css';
-
-import Login from './Vistas/login';
+import Home from './Vistas/empleado/home';
 
 function App() {
   return (
-    <div>
-      <Login></Login>
-    </div>    
-  );
+    <Home/>
+);
 }
 
 export default App;
