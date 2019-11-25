@@ -1,9 +1,11 @@
 import React,{Component} from 'react';
 
+// MBDREACT COMPONENTS
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import { MDBCard, MDBCardBody, MDBCardHeader, MDBInput, MDBBtn, MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
+import { MDBListGroup, MDBListGroupItem, MDBContainer } from "mdbreact";
 
 // MATERIAL ICONS
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
@@ -11,6 +13,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
+import SearchIcon from '@material-ui/icons/Search';
+
+
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -43,8 +48,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
         'sort'  : 'asc'
     },
     {
-        'label' : 'Ubicación',
-        'field' : 'Ubicacion',
+        'label' : 'Descripcion',
+        'field' : 'Descripcion',
         'sort'  : 'asc'
     },
     {
@@ -53,8 +58,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
         'sort'  : 'asc'
     },
     {
-        'label' : 'Email',
-        'field' : 'email',
+        'label' : 'rating',
+        'field' : 'rating',
+        'sort'  : 'asc'
+    },
+    {
+        'label' : 'horario',
+        'field' : 'horario',
         'sort'  : 'asc'
     },
     {
@@ -77,6 +87,8 @@ class TablePage extends Component {
             data : [],
             data_temp : [],
             data_panel : [],
+            options : [],
+            suggest : false,
         };
         this.delete_aeropuerto = this.delete_aeropuerto.bind(this);
         this.post_aeropuerto = this.post_aeropuerto.bind(this);
@@ -323,7 +335,38 @@ class TablePage extends Component {
         this.delete_aeropuerto(elements)
         this.setState({confirm:false})
     }
+
+    //  NUEVAS FUNCIONES
+    suggestOption(value){
+        if(value){
+            let newOptions = [
+                'Walmart',
+                'Megasuper',
+                'Pali'
+            ]
+            this.setState ( {
+                suggest : true,
+                options : newOptions,
+            } )
+        }
+        else {
+            this.setState ( {
+                suggest : false,
+            } )
+        }
+    }
+    
+    selectOption(index){
+        alert(index)
+        console.log("print",index)
+    }
+
+
     render(){
+        const formStyle = {
+            display:"flex",
+            justifyContent:"flex-start"
+        }
     return(
         <MDBCard narrow>
          <Dialog
@@ -346,7 +389,47 @@ class TablePage extends Component {
       </Dialog>
 
         <MDBCardHeader className="view view-cascade gradient-card-header blue-gradient d-flex justify-content-between align-items-center py-2 mx-4 mb-3">
-            <a href="#" className="white-text mx-3">{'Funcionarios'}</a>
+            <h3 href="#" className="white-text mx-3">Supermercados</h3>
+            
+        </MDBCardHeader>
+        <MDBCardBody narrow>
+        <MDBContainer>
+        <h5>Agregar un Supermercado</h5>
+             <div style = {formStyle}>
+                <div style={{marginRight:"25px"}}>
+                <MDBInput size="sm" label="Latitud" type="text"   id='pala' />       
+                </div>
+                <MDBInput size="sm" label="Longitud" type="text"   id='melon' />       
+                <div style={{display:"flex", alignItems:"center" }}>
+                    <MDBBtn size="sm" onClick = {() => this.delete_elements()}  color="white">
+                        <SearchIcon style= {{color:'black'}}/>
+                    </MDBBtn>
+                </div>
+                </div>
+            </MDBContainer>
+            <MDBContainer>
+            <MDBInput size="sm" label="Dirección" type="text" getValue={b=>this.suggestOption(b)}  id='dir' />
+            {
+                this.state.suggest &&
+                
+                  <MDBListGroup style={{ width: "22rem" }}>
+                    {
+                        this.state.options.map((option) => <MDBListGroupItem onClick={op =>{this.selectOption(option)}} hover>{option}</MDBListGroupItem>)
+                    }
+                  </MDBListGroup>
+            }
+
+            
+                <MDBInput size="sm" label="Codigo Supermercado" type="text"   id={'code'} />
+                </MDBContainer>
+
+    
+        </MDBCardBody>
+        <hr/>
+        <MDBCardHeader className="view view-cascade gradient-card-header blue-gradient d-flex justify-content-around align-items-center py-2 mx-4 mb-3">
+            <h5 style = {{color:"white"}}>
+                Supermercados Registrados
+            </h5>
             <div>
             {
                 this.state.edit &&
@@ -363,9 +446,9 @@ class TablePage extends Component {
             <MDBBtn outline size="sm" onClick = {()=>this.edit_elements()} color="white" className="px-2">
                 <EditIcon/>
             </MDBBtn>
-            <MDBBtn outline onClick = {() => this.create_elements()} size="sm" color="white" className="px-2">
+            {/* <MDBBtn outline onClick = {() => this.create_elements()} size="sm" color="white" className="px-2">
                 <AddCircleOutlineIcon/>
-            </MDBBtn>
+            </MDBBtn> */}
             <MDBBtn outline  onClick = {() => this.delete_elements()}size="sm" color="white" className="px-2">
                 <DeleteIcon/>
             </MDBBtn>
