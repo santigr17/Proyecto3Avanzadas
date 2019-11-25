@@ -40,6 +40,8 @@ module.exports = function(app) {
     .put(client.update)
     .delete(client.delete);
 
+  app.route("/login/:user/:pass").get(client.login);
+
   //   ORDER routes
   app.route("/orders/").get(order.all_orders);
 
