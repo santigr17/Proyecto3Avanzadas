@@ -1,0 +1,118 @@
+CREATE CONSTRAINT ON (p:Product) ASSERT p.Code IS UNIQUE;
+CREATE CONSTRAINT ON (m:Market) ASSERT m.Code IS UNIQUE;
+CREATE CONSTRAINT ON (o:Order) ASSERT o.Code IS UNIQUE;
+CREATE CONSTRAINT ON (c:Client) ASSERT c.Identification IS UNIQUE;
+CREATE CONSTRAINT ON (e:Employee) ASSERT e.Identification IS UNIQUE;
+
+LOAD CSV WITH HEADERS FROM "file:///persons.csv" AS csvLine
+CREATE (p:Person {id: toInteger(csvLine.id), name: csvLine.name})
+
+###
+MATCH (n) RETURN n
+##
+CREATE (p:Product { Code: 1, Name: '7up', Description: 'Gaseosa', Price: 900 })
+CREATE (p:Product { Code: 2, Name: 'Tronaditas', Description: 'Snacks', Price: 500 })
+CREATE (p:Product { Code: 3, Name: 'Arroz', Description: 'Canasta Basica', Price: 1700 })
+
+CREATE (c:Client { Identification: 1, Name: 'Daniela' })
+CREATE (c:Client { Identification: 2, Name: 'Alejandra' })
+CREATE (c:Client { Identification: 3, Name: 'Juan' })
+
+CREATE (e:Employee { Identification: 1, Name: 'Santi' })
+
+CREATE (m:Market { Code: 1, Name: 'Walmart' })
+CREATE (m:Market { Code: 2, Name: 'Megasuper' })
+CREATE (m:Market { Code: 2, Name: 'Pali' })
+
+CREATE (o:Order { Code: 1, State: 'Delivered'})
+CREATE (o:Order { Code: 2, State: 'Pending'})
+CREATE (o:Order { Code: 3, State: 'Complete'})
+CREATE (o:Order { Code: 4, State: 'Complete'})
+
+##
+MATCH (e:Employee),(m:Market)
+WHERE m.Code = 1 AND e.Identification = 1
+CREATE (e)-[r1:WORKSON]->(m)
+
+MATCH (o:Order),(m:Market),(c:Client)
+WHERE o.Code = 1 AND m.Code = 1 AND c.Identification = 1
+CREATE (m)-[r1:REGISTER]->(o)
+CREATE (c)-[r2:PAYS]->(o)
+
+MATCH (o:Order),(m:Market),(c:Client)
+WHERE o.Code = 2 AND m.Code = 1 AND c.Identification = 2
+CREATE (m)-[r1:REGISTER]->(o)
+CREATE (c)-[r2:PAYS]->(o)
+
+MATCH (o:Order),(m:Market),(c:Client)
+WHERE o.Code = 3 AND m.Code = 2 AND c.Identification = 2
+CREATE (m)-[r1:REGISTER]->(o)
+CREATE (c)-[r2:PAYS]->(o)
+
+MATCH (o:Order),(m:Market),(c:Client)
+WHERE o.Code = 4 AND m.Code = 2 AND c.Identification = 3
+CREATE (m)-[r1:REGISTER]->(o)
+CREATE (c)-[r2:PAYS]->(o)
+
+
+MATCH (p:Product),(o:Order)
+WHERE o.Code = 1 AND p.Code < 3 
+CREATE (o)-[r3:HAS]->(p)
+
+MATCH (p:Product),(o:Order)
+WHERE o.Code = 2 AND p.Code > 1 
+CREATE (o)-[r3:HAS]->(p)
+
+MATCH (p:Product),(o:Order)
+WHERE o.Code = 3 AND p.Code = 1 
+CREATE (o)-[r3:HAS]->(p)
+
+MATCH (p:Product),(o:Order)
+WHERE o.Code = 4 AND p.Code = 2
+CREATE (o)-[r3:HAS]->(p)
+
+##
+MATCH ()-[r:REGISTER]-() 
+DELETE r
+MATCH ()-[r:PAYS]-() 
+DELETE r
+MATCH ()-[r:HAS]-() 
+DELETE r
+
+### CONSULTAS
+## Historial Pedidos de Cliente 2
+MATCH (:Client{Identification:2}) --> (orders:Order)
+WITH orders
+MATCH (orders)-[r1:HAS]->(p:Product)
+RETURN orders,p
+
+## Sucursales con Pedidos
+MATCH (m:Market) WHERE (m)-[:REGISTER]->()
+RETURN m
+
+## TOP 5
+MATCH (m:Market)
+RETURN m, size( (m)-[:REGISTER]-() ) AS num
+ORDER BY num DESC
+LIMIT 5
+
+## Clientes Comun
+MATCH (:Client{Identification:2}) --> (os:Order)
+WITH os
+MATCH (os) <-- (ms:Market)
+WITH ms
+MATCH (ms) --> (os2:Order)
+WITH os2
+MATCH (os2) <-- (cs:Client)
+WHERE cs.Identification <> 2
+RETURN cs
+
+## Productos Comun
+MATCH (:Client{Identification:2}) --> (os:Order)
+WITH os
+MATCH (os) <-- (ms:Market)
+WITH ms
+MATCH (ms) --> (os2:Order)
+WITH os2
+MATCH (os2) --> (ps:Product)
+RETURN DISTINCT ps

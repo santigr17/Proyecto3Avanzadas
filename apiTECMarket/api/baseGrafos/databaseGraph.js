@@ -4,7 +4,7 @@ const neo4j = require('neo4j-driver').v1;
 const driver = neo4j.driver('bolt://localhost:11020', neo4j.auth.basic(user, password));
 
 
-exports.createProduct = function (code, name, description, price)
+createProduct = function (code, name, description, price)
 {
     const session = driver.session();
     try {
@@ -39,5 +39,6 @@ exports.createProduct = function (code, name, description, price)
 
 }
 
-// module.exports  = driver;
+
+module.exports.driver = driver;
 

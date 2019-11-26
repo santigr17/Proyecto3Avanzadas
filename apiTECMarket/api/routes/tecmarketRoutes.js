@@ -65,5 +65,26 @@ module.exports = function(app) {
     .delete(employee.delete);
 
   //  Graph DataBase routes
-  app.route("/graph/migrate/").get(graph.migrate);
+  app
+    .route("/graph/client/:client")
+    .get(graph.history);
+  app
+    .route("/graph/migrate/")
+    .get(graph.migrate);
+  
+  app
+    .route("/graph/top5/")
+    .get(graph.top5);
+  
+    app
+    .route("/graph/withorders/")
+    .get(graph.withorders);
+
+    app
+    .route("/graph/client/incommon/:client")
+    .get(graph.clientsincommon);
+
+    app
+    .route("/graph/product/incommon/:client")
+    .get(graph.productsincommon);
 };
