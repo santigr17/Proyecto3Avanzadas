@@ -44,3 +44,25 @@ exports.delete = function(req, res) {
     res.json({ message: "Client deleted, succesfully" });
   });
 };
+
+function validate(clientFound, res) {
+  if (clientFound == "") {
+    access = false;
+    res.send(access);
+  } else {
+    access = true;
+    res.send(access);
+  }
+}
+
+exports.login = function(req, res) {
+  client.find(
+    { $and: [{ Username: req.params.user }, { Password: req.params.pass }] },
+    {},
+    function(err, clientFound) {
+      if (err) res.send(err);
+      // res.json(clientFound);
+      validate(clientFound, res);
+    }
+  );
+};
