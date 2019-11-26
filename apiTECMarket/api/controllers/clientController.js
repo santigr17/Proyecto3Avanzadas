@@ -56,8 +56,6 @@ function validate(clientFound, res) {
 }
 
 exports.login = function(req, res) {
-  console.log("User", req.params.user);
-  console.log("Pass", req.params.pass);
   client.find(
     { $and: [{ Username: req.params.user }, { Password: req.params.pass }] },
     {},
