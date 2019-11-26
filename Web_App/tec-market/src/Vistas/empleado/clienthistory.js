@@ -46,8 +46,13 @@ const fields = [
     sort: "asc"
   },
   {
-    label: "Name",
-    field: "Name",
+    label: "State",
+    field: "State",
+    sort: "asc"
+  },
+  {
+    label: "Products",
+    field: "Products",
     sort: "asc"
   }
 ];
@@ -64,17 +69,66 @@ class TablePage extends Component {
       data_panel: [],
       options: [],
       suggest: false,
-      top: []
+      history: [],
+      clientName: ""
     };
   }
 
   componentDidMount() {
     axios
-      .get("http://localhost:8080//")
+      .get("http://localhost:8080/graph/client/:client")
       .then(response => {})
       .catch(error => {
         console.log(error);
         alert("Error trying to get Markets");
+      });
+  }
+
+  saveValue(value) {
+    if (value) {
+      this.setState({ clientName: value });
+    } else {
+      this.setState({ clientName: "" });
+    }
+  }
+
+  search_history() {
+    axios
+      .get("http://localhost:8080/graph/client/" + this.state.clientName)
+      .then(response => {
+        var tempData = [];
+        response.data.map(order => {
+          var tempOrder = {
+            Code: order.Code,
+            State: order.State,
+            Products: []
+          };
+          tempData.push(tempOrder);
+        });
+        // Products: <React.Fragment> {order.Products.map((product) =>
+        //   <MDBListGroupItem hover>{products.Code}</MDBListGroupItem>
+        //   <MDBListGroupItem hover>{products.Name}</MDBListGroupItem>
+        // )}</React.Fragment>
+        // })
+        this.setState({ history: tempData });
+      })
+      .catch(error => {
+        console.log(error);
+        alert("Error trying to get history");
+        this.setState({
+          history: [
+            {
+              Code: 3,
+              State: "Complete",
+              Products: []
+            },
+            {
+              Code: 2,
+              State: "Pending",
+              Products: []
+            }
+          ]
+        });
       });
   }
 
@@ -111,6 +165,30 @@ class TablePage extends Component {
             Client history
           </h3>
         </MDBCardHeader>
+        <MDBCardBody narrow>
+          <MDBInput
+            size="sm"
+            label="Client"
+            type="text"
+            getValue={b => this.saveValue(b)}
+            id="dir"
+          />
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <MDBBtn
+              size="sm"
+              onClick={() => this.search_history()}
+              color="white"
+            >
+              <SearchIcon style={{ color: "black" }} />
+            </MDBBtn>
+          </div>
+          <MDBCardBody cascade>
+            <MDBTable btn fixed>
+              <MDBTableHead columns={fields} />
+              <MDBTableBody rows={this.state.history} />
+            </MDBTable>
+          </MDBCardBody>
+        </MDBCardBody>
       </MDBCard>
     );
   }

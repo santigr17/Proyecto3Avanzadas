@@ -41,15 +41,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const fields = [
   {
-    label: "Code",
-    field: "Code",
-    sort: "asc"
-  },
-  {
     label: "Name",
     field: "Name",
     sort: "asc"
+  },
+  {
+    label: "Code",
+    field: "Code",
+    sort: "asc"
   }
+];
+
+const fields2 = [
+  { label: "Name", field: "Name", sort: "asc" },
+  { label: "Count", field: "Count", sort: "asc" }
 ];
 
 class TablePage extends Component {
@@ -64,17 +69,61 @@ class TablePage extends Component {
       data_panel: [],
       options: [],
       suggest: false,
-      top: []
+      top: [],
+      orders: []
     };
   }
 
   componentDidMount() {
     axios
-      .get("http://localhost:8080//")
-      .then(response => {})
+      .get("http://localhost:8080/graph/top5/")
+      .then(response => {
+        this.setState({ top: response.data });
+      })
       .catch(error => {
         console.log(error);
         alert("Error trying to get Markets");
+        this.setState({
+          top: [
+            {
+              Name: "Megasuper",
+              Count: 2
+            },
+            {
+              Name: "Walmart",
+              Count: 2
+            },
+            {
+              Name: "Pali",
+              Count: 1
+            }
+          ]
+        });
+      });
+    axios
+      .get("http://localhost:8080/graph/withorders/")
+      .then(response => {
+        this.setState({ orders: response.data });
+      })
+      .catch(error => {
+        console.log(error);
+        alert("Error trying to get Orders");
+        this.setState({
+          orders: [
+            {
+              Name: "Megasuper",
+              Code: 2
+            },
+            {
+              Name: "Walmart",
+              Code: 1
+            },
+            {
+              Name: "Pali",
+              Code: 3
+            }
+          ]
+        });
       });
   }
 
@@ -111,25 +160,20 @@ class TablePage extends Component {
             Top 5
           </h3>
         </MDBCardHeader>
-        <MDBCardBody narrow>
-          <MDBContainer>
-            <h5>Orders</h5>
-            <div style={formStyle}></div>
-          </MDBContainer>
-          <MDBContainer>
-            <MDBTable btn fixed>
-              <MDBTableBody rows={this.state.top} />
-            </MDBTable>
-          </MDBContainer>
+        <MDBCardBody cascade>
+          <MDBTable btn fixed>
+            <MDBTableHead columns={fields2} />
+            <MDBTableBody rows={this.state.top} />
+          </MDBTable>
         </MDBCardBody>
         <hr />
         <MDBCardHeader className="view view-cascade gradient-card-header blue-gradient d-flex justify-content-around align-items-center py-2 mx-4 mb-3">
-          <h5 style={{ color: "white" }}>Market with orders</h5>
+          <h5 style={{ color: "white" }}>Markets with orders</h5>
         </MDBCardHeader>
         <MDBCardBody cascade>
           <MDBTable btn fixed>
             <MDBTableHead columns={fields} />
-            <MDBTableBody rows={this.state.market_orders} />
+            <MDBTableBody rows={this.state.orders} />
           </MDBTable>
         </MDBCardBody>
       </MDBCard>
